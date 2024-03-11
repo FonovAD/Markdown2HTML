@@ -2,6 +2,7 @@ package main
 
 import (
 	"Markdown_Processor/internal/processing"
+	"Markdown_Processor/internal/render"
 	"fmt"
 	"os"
 
@@ -29,5 +30,18 @@ func main() {
 	}
 
 	FileLines, _ := processing.Split(file)
-	fmt.Println(FileLines)
+	// for i := range FileLines {
+	// 	fmt.Println(FileLines[i])
+	// }
+
+	WordsMatrix := make([][]string, len(FileLines))
+	for i := range FileLines {
+		if len(FileLines[i]) != 0 {
+			SplitedWords, _ := render.WordSplitter(FileLines[i])
+			for j := range SplitedWords {
+				WordsMatrix[i] = append(WordsMatrix[i], SplitedWords[j])
+			}
+		}
+	}
+	fmt.Println(WordsMatrix)
 }
