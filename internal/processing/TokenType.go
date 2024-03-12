@@ -13,6 +13,6 @@ var TokenTypeList = map[string]TokenType{
 	"NUMBEREDLIST": TokenType{"NUMBEREDLIST", "[\\d.]"},
 	"CODE":         TokenType{"CODE", "[`]"},
 	"CODEBLOCK":    TokenType{"CODEBLOCK", "[`]{3}"},
-	"TEXT":         TokenType{"TEXT", "\\w+"},
+	"WORD":         TokenType{"WORD", "\\w+"},
 	"SPACE":        TokenType{"SPACE", "[\\t|\\v|\\s]"},
 }
