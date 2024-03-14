@@ -27,7 +27,7 @@ func (L *Lexer) NextToken() bool {
 		return false
 	}
 	var tokenTypesValues []string
-	for key, _ := range TokenTypeList {
+	for key := range TokenTypeList {
 		tokenTypesValues = append(tokenTypesValues, key)
 	}
 	for i := 0; i < len(tokenTypesValues)-1; i++ {
