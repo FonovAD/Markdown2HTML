@@ -78,6 +78,15 @@ func (P *Parser) ParseLine() Node {
 		n := P.ParseText()
 		return Node{operator: token, operand: []*Node{&n}}
 	}
+	if operator := P.Match([]TokenType{TokenTypes["CODE"]}); operator != EmptyToken {
+		CodeNodes := []*Node{}
+		for P.Match([]TokenType{TokenTypes["CODE"]}) == EmptyToken {
+			fmt.Println("->")
+			n := P.ParseText()
+			CodeNodes = append(CodeNodes, &n)
+		}
+		return Node{operator: operator, operand: CodeNodes}
+	}
 	var node = Node{operator: Token{}, operand: []*Node{}}
 	for P.Match([]TokenType{TokenTypes["SEMICOLON"]}) == EmptyToken {
 		n := P.ParseText()
@@ -111,14 +120,6 @@ func (P *Parser) ParseText() Node {
 	if space := P.Match([]TokenType{TokenTypes["SPACE"]}); space != EmptyToken {
 		n := P.ParseText()
 		return Node{operator: space, operand: []*Node{&n}}
-	}
-	if operator := P.Match([]TokenType{TokenTypes["CODE"]}); operator != EmptyToken {
-		CodeNodes := []*Node{}
-		for P.Match([]TokenType{TokenTypes["CODE"]}) == EmptyToken {
-			n := P.ParseText()
-			CodeNodes = append(CodeNodes, &n)
-		}
-		return Node{operator: operator, operand: CodeNodes}
 	}
 	return Node{}
 }
