@@ -6,6 +6,24 @@ import (
 
 var EmptyToken Token = Token{TokenType{"", ""}, "", 0}
 
+var prefixHeadings = map[string]string{
+	"#":      "<h1>",
+	"##":     "<h2>",
+	"###":    "<h3>",
+	"####":   "<h4>",
+	"#####":  "<h5>",
+	"######": "<h6>",
+}
+
+var postfixHeadings = map[string]string{
+	"#":      "</h1>",
+	"##":     "</h2>",
+	"###":    "</h3>",
+	"####":   "</h4>",
+	"#####":  "</h5>",
+	"######": "</h6>",
+}
+
 type Parser struct {
 	Tokens []Token
 	Pos    int
@@ -44,32 +62,39 @@ func (P *Parser) NewParseCode() StatmentsNode { //StatmentsNode - корень �
 }
 
 func (P *Parser) ParseLine() Node {
-	if token := P.Match([]TokenType{TokenTypeList["HEADING"]}); token != EmptyToken {
+	if token := P.Match([]TokenType{TokenTypes["HEADING"]}); token != EmptyToken {
 		n := P.ParseText()
 		return Node{operator: token, operand: []*Node{&n}}
 	}
-	if token := P.Match([]TokenType{TokenTypeList["LINE"]}); token != EmptyToken {
+	if token := P.Match([]TokenType{TokenTypes["LINE"]}); token != EmptyToken {
 		return Node{operator: token, operand: nil}
 	}
-	if token := P.Match([]TokenType{TokenTypeList["NUMBEREDLIST"]}); token != EmptyToken {
+	if token := P.Match([]TokenType{TokenTypes["NUMBEREDLIST"]}); token != EmptyToken {
 		P.Pos -= 1
 		n := P.ParseText()
 		return Node{operator: token, operand: []*Node{&n}}
 	}
+	if token := P.Match([]TokenType{TokenTypes["WORD"]}); token != EmptyToken {
+		n := P.ParseText()
+		return Node{operator: token, operand: []*Node{&n}}
+	}
 	var node = Node{operator: Token{}, operand: []*Node{}}
-	for P.Match([]TokenType{TokenTypeList["SEMICOLON"]}) != EmptyToken {
+	for P.Match([]TokenType{TokenTypes["SEMICOLON"]}) == EmptyToken {
 		n := P.ParseText()
 		node.operand = append(node.operand, &n)
+	}
+	if token := P.Match([]TokenType{TokenTypes["SEMICOLON"]}); token != EmptyToken {
+		return Node{operator: token, operand: []*Node{}}
 	}
 	return node
 }
 
 func (P *Parser) ParseList() Node {
-	listnode := Node{operator: Token{Type: TokenTypeList["GROUPNUMBEREDLIST"], Text: "GROUPNUMBEREDLIST", Pos: P.Pos}}
-	token := P.Match([]TokenType{TokenTypeList["NUMBEREDLIST"]})
+	listnode := Node{operator: Token{Type: SecondTokenTypes["GROUPNUMBEREDLIST"], Text: "GROUPNUMBEREDLIST", Pos: P.Pos}}
+	token := P.Match([]TokenType{TokenTypes["NUMBEREDLIST"]})
 	for token != EmptyToken {
 		node := Node{operator: token, operand: []*Node{}}
-		for P.Match([]TokenType{TokenTypeList["SEMICOLON"]}) != EmptyToken {
+		for P.Match([]TokenType{TokenTypes["SEMICOLON"]}) != EmptyToken {
 			n := P.ParseText()
 			node.operand = append(node.operand, &n)
 		}
@@ -79,25 +104,20 @@ func (P *Parser) ParseList() Node {
 }
 
 func (P *Parser) ParseText() Node {
-	if word := P.Match([]TokenType{TokenTypeList["WORD"]}); word != EmptyToken {
+	if word := P.Match([]TokenType{TokenTypes["WORD"]}); word != EmptyToken {
 		n := P.ParseText()
 		return Node{operator: word, operand: []*Node{&n}}
 	}
-	if space := P.Match([]TokenType{TokenTypeList["SPACE"]}); space != EmptyToken {
+	if space := P.Match([]TokenType{TokenTypes["SPACE"]}); space != EmptyToken {
 		n := P.ParseText()
 		return Node{operator: space, operand: []*Node{&n}}
 	}
-	if operator := P.Match([]TokenType{TokenTypeList["CODE"]}); operator != EmptyToken {
+	if operator := P.Match([]TokenType{TokenTypes["CODE"]}); operator != EmptyToken {
 		CodeNodes := []*Node{}
-		for P.Match([]TokenType{TokenTypeList["CODE"]}) == EmptyToken {
-			if token := P.Match([]TokenType{TokenTypeList["WORD"]}); token != EmptyToken {
-				CodeNodes = append(CodeNodes, &Node{operator: token, operand: nil})
-			}
-			if token := P.Match([]TokenType{TokenTypeList["SPACE"]}); token != EmptyToken {
-				CodeNodes = append(CodeNodes, &Node{operator: token, operand: nil})
-			}
+		for P.Match([]TokenType{TokenTypes["CODE"]}) == EmptyToken {
+			n := P.ParseText()
+			CodeNodes = append(CodeNodes, &n)
 		}
-		P.Require([]TokenType{TokenTypeList["CODE"]})
 		return Node{operator: operator, operand: CodeNodes}
 	}
 	return Node{}
