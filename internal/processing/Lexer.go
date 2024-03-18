@@ -27,11 +27,11 @@ func (L *Lexer) NextToken() bool {
 		return false
 	}
 	var tokenTypesValues []string
-	for key := range TokenTypeList {
+	for key := range TokenTypes {
 		tokenTypesValues = append(tokenTypesValues, key)
 	}
 	for i := 0; i < len(tokenTypesValues)-1; i++ {
-		tokenType := TokenTypeList[tokenTypesValues[i]]
+		tokenType := TokenTypes[tokenTypesValues[i]]
 		r, _ := regexp.Compile("^" + tokenType.regex)
 		result := r.FindString(L.Code[L.Pos:])
 		found := r.MatchString(L.Code[L.Pos:])
