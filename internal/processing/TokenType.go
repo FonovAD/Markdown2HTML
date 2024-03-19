@@ -6,6 +6,7 @@ type TokenType struct {
 }
 
 var TokenTypes = map[string]TokenType{
+	// "PUNCTUATION":  TokenType{"PUNCTUATION", "\\D[.]{1}"},
 	"SEMICOLON":    TokenType{"SEMICOLON", "[\\n|\\v]"},
 	"HEADING":      TokenType{"HEADING", "[#]{1,6}"},
 	"LINE":         TokenType{"LINE", "[=|-|*]{3,}"},
@@ -13,7 +14,7 @@ var TokenTypes = map[string]TokenType{
 	"NUMBEREDLIST": TokenType{"NUMBEREDLIST", "\\d[.]"},
 	"CODE":         TokenType{"CODE", "[`]"},
 	"CODEBLOCK":    TokenType{"CODEBLOCK", "[`]{3}"},
-	"WORD":         TokenType{"WORD", "\\w+"},
+	"WORD":         TokenType{"WORD", "\\w+[.|,|!|?]?"},
 	"SPACE":        TokenType{"SPACE", "[ ]{1,}"},
 }
 
