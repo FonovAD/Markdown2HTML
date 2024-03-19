@@ -10,11 +10,11 @@ var TokenTypes = map[string]TokenType{
 	"HEADING":      TokenType{"HEADING", "[#]{1,6}"},
 	"LINE":         TokenType{"LINE", "[=|-|*]{3,}"},
 	"LIST":         TokenType{"LIST", "[*|-|+]{1}"},
-	"NUMBEREDLIST": TokenType{"NUMBEREDLIST", "[\\d.]"},
+	"NUMBEREDLIST": TokenType{"NUMBEREDLIST", "\\d[.]"},
 	"CODE":         TokenType{"CODE", "[`]"},
 	"CODEBLOCK":    TokenType{"CODEBLOCK", "[`]{3}"},
 	"WORD":         TokenType{"WORD", "\\w+"},
-	"SPACE":        TokenType{"SPACE", "[ |\\t]{1,}"},
+	"SPACE":        TokenType{"SPACE", "[ ]{1,}"},
 }
 
 var SecondTokenTypes = map[string]TokenType{

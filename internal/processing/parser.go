@@ -70,7 +70,6 @@ func (P *Parser) ParseLine() Node {
 		return Node{operator: token, operand: nil}
 	}
 	if token := P.Match([]TokenType{TokenTypes["NUMBEREDLIST"]}); token != EmptyToken {
-		P.Pos -= 1
 		n := P.ParseText()
 		return Node{operator: token, operand: []*Node{&n}}
 	}
@@ -81,7 +80,6 @@ func (P *Parser) ParseLine() Node {
 	if operator := P.Match([]TokenType{TokenTypes["CODE"]}); operator != EmptyToken {
 		CodeNodes := []*Node{}
 		for P.Match([]TokenType{TokenTypes["CODE"]}) == EmptyToken {
-			fmt.Println("->")
 			n := P.ParseText()
 			CodeNodes = append(CodeNodes, &n)
 		}

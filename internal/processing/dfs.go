@@ -33,12 +33,14 @@ func LineLayout(node Node) string {
 		}
 		return HTMLLine
 	}
-	if node.operator.Type.name == "GROUPNUMBEREDLIST" {
-		HTMLLine += "<ol>"
+	if node.operator.Type.name == "NUMBEREDLIST" {
+		HTMLLine += `<li style="list-style-type:'`
+		HTMLLine += node.operator.Text
+		HTMLLine += `'; margin-left:1vw">`
 		for i := range node.operand {
 			HTMLLine += LineLayout(*node.operand[i])
 		}
-		HTMLLine += "</ol>"
+		HTMLLine += "</li>"
 		return HTMLLine
 	}
 	if node.operator.Type.name == "CODE" {
