@@ -14,7 +14,7 @@ func (L *Lexer) LexAnalusis() []Token {
 	count := 0
 	for L.NextToken() {
 		if count > len(L.Code)*5 {
-			panic("Не могу разобрать слова")
+			panic("I can't make out the words, try again")
 		} else {
 			count += 1
 		}
