@@ -2,7 +2,6 @@ package processing
 
 import (
 	"errors"
-	"io"
 	"os"
 )
 
@@ -12,10 +11,10 @@ func ReadFile(FileName string) ([]byte, error) {
 		return []byte{0}, errors.New("error opening file")
 	}
 	defer MarkdownFile.Close()
-	FileData := make([]byte, 64)
+	FileData := make([]byte, 8192)
 	for {
-		_, err := MarkdownFile.Read(FileData)
-		if err == io.EOF {
+		MarkdownFile.Read(FileData)
+		if FileData[len(FileData)-1] == byte(0) {
 			break
 		}
 	}
