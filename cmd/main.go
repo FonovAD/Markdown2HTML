@@ -33,7 +33,6 @@ func main() {
 			FileWithoutByte0 = append(FileWithoutByte0, file[i])
 		}
 	}
-	fmt.Println(string(FileWithoutByte0))
 	lex := processing.Lexer{
 		Code:      string(FileWithoutByte0),
 		Pos:       0,
@@ -48,8 +47,7 @@ func main() {
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Document</title>
 	</head>
-	<body>
-	<div>`
+	<body>`
 	parser := processing.Parser{Tokens: lex.TokenList, Pos: 0}
 	root := parser.NewParseCode()
 	HTML += processing.Run(root)
