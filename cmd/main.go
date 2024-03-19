@@ -2,7 +2,6 @@ package main
 
 import (
 	"Markdown_Processor/internal/processing"
-	"Markdown_Processor/internal/render"
 	"fmt"
 	"os"
 
@@ -28,20 +27,34 @@ func main() {
 	if err != nil {
 		fmt.Printf("Error: %s", err)
 	}
-
-	FileLines, _ := processing.Split(file)
-	// for i := range FileLines {
-	// 	fmt.Println(FileLines[i])
-	// }
-
-	WordsMatrix := make([][]string, len(FileLines))
-	for i := range FileLines {
-		if len(FileLines[i]) != 0 {
-			SplitedWords, _ := render.WordSplitter(FileLines[i])
-			for j := range SplitedWords {
-				WordsMatrix[i] = append(WordsMatrix[i], SplitedWords[j])
-			}
+	FileWithoutByte0 := []byte{}
+	for i := range file {
+		if file[i] != byte(0) {
+			FileWithoutByte0 = append(FileWithoutByte0, file[i])
 		}
 	}
-	fmt.Println(WordsMatrix)
+	fmt.Println(string(FileWithoutByte0))
+	lex := processing.Lexer{
+		Code:      string(FileWithoutByte0),
+		Pos:       0,
+		TokenList: []processing.Token{},
+	}
+	lex.LexAnalusis()
+	fmt.Println(lex.TokenList)
+	HTML := `<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Document</title>
+	</head>
+	<body>
+	<div>`
+	parser := processing.Parser{Tokens: lex.TokenList, Pos: 0}
+	root := parser.NewParseCode()
+	HTML += processing.Run(root)
+	HTML += `
+	</body>
+	</html>`
+	fmt.Println(HTML)
 }
