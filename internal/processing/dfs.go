@@ -59,6 +59,14 @@ func LineLayout(node Node) string {
 				HTMLLine += LineLayout(*node.operand[i])
 			}
 		}
+	case "LIST":
+		{
+			HTMLLine += `<li style="margin-left:1vw">`
+			for i := range node.operand {
+				HTMLLine += LineLayout(*node.operand[i])
+			}
+			HTMLLine += "</li>"
+		}
 	}
 	return HTMLLine
 }
