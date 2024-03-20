@@ -73,6 +73,10 @@ func (P *Parser) ParseLine() Node {
 		n := P.ParseText()
 		return Node{operator: token, operand: []*Node{&n}}
 	}
+	if token := P.Match([]TokenType{TokenTypes["LIST"]}); token != EmptyToken {
+		n := P.ParseText()
+		return Node{operator: token, operand: []*Node{&n}}
+	}
 	if token := P.Match([]TokenType{TokenTypes["WORD"]}); token != EmptyToken {
 		n := P.ParseText()
 		return Node{operator: token, operand: []*Node{&n}}
