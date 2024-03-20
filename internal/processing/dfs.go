@@ -10,53 +10,55 @@ func Run(node StatmentsNode) string {
 
 func LineLayout(node Node) string {
 	HTMLLine := ""
-	if node.operator.Type.name == "HEADING" {
-		HTMLLine += prefixHeadings[node.operator.Text]
-		for i := range node.operand {
-			HTMLLine += LineLayout(*node.operand[i])
+	switch node.operator.Type.name {
+	case "HEADING":
+		{
+			HTMLLine += prefixHeadings[node.operator.Text]
+			for i := range node.operand {
+				HTMLLine += LineLayout(*node.operand[i])
+			}
+			HTMLLine += postfixHeadings[node.operator.Text]
 		}
-		HTMLLine += postfixHeadings[node.operator.Text]
-		return HTMLLine
-	}
-	if node.operator.Type.name == "LINE" {
-		HTMLLine += "<hr stule=\"border: none; background-color: black; color: black; height: 2px;\"></hr>"
-		return HTMLLine
-	}
-	if node.operator.Type.name == "SEMICOLON" {
-		HTMLLine += "\n"
-		return HTMLLine
-	}
-	if node.operator.Type.name == "WORD" {
-		HTMLLine += node.operator.Text
-		for i := range node.operand {
-			HTMLLine += LineLayout(*node.operand[i])
+	case "LINE":
+		{
+			HTMLLine += "<hr stule=\"border: none; background-color: black; color: black; height: 2px;\"></hr>"
 		}
-		return HTMLLine
-	}
-	if node.operator.Type.name == "NUMBEREDLIST" {
-		HTMLLine += `<li style="list-style-type:'`
-		HTMLLine += node.operator.Text
-		HTMLLine += `'; margin-left:1vw">`
-		for i := range node.operand {
-			HTMLLine += LineLayout(*node.operand[i])
+	case "SEMICOLON": // It will never happen
+		{ // Reserved for future feature additions
+			HTMLLine += "\n"
 		}
-		HTMLLine += "</li>"
-		return HTMLLine
-	}
-	if node.operator.Type.name == "CODE" {
-		HTMLLine += "<code>"
-		for i := range node.operand {
-			HTMLLine += LineLayout(*node.operand[i])
+	case "WORD":
+		{
+			HTMLLine += node.operator.Text
+			for i := range node.operand {
+				HTMLLine += LineLayout(*node.operand[i])
+			}
 		}
-		HTMLLine += "</code>"
-		return HTMLLine
-	}
-	if node.operator.Type.name == "SPACE" {
-		HTMLLine += " "
-		for i := range node.operand {
-			HTMLLine += LineLayout(*node.operand[i])
+	case "NUMBEREDLIST":
+		{
+			HTMLLine += `<li style="list-style-type:'`
+			HTMLLine += node.operator.Text
+			HTMLLine += `'; margin-left:1vw">`
+			for i := range node.operand {
+				HTMLLine += LineLayout(*node.operand[i])
+			}
+			HTMLLine += "</li>"
 		}
-		return HTMLLine
+	case "CODE":
+		{
+			HTMLLine += "<code>"
+			for i := range node.operand {
+				HTMLLine += LineLayout(*node.operand[i])
+			}
+			HTMLLine += "</code>"
+		}
+	case "SPACE":
+		{
+			HTMLLine += " "
+			for i := range node.operand {
+				HTMLLine += LineLayout(*node.operand[i])
+			}
+		}
 	}
 	return HTMLLine
 }
