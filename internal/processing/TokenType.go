@@ -10,7 +10,7 @@ var TokenTypes = map[string]TokenType{
 	"SEMICOLON":    TokenType{"SEMICOLON", "[\\n|\\v]"},
 	"HEADING":      TokenType{"HEADING", "[#]{1,6}"},
 	"LINE":         TokenType{"LINE", "[=|-|*]{3,}"},
-	"LIST":         TokenType{"LIST", "[*|-|+]{1}"},
+	"LIST":         TokenType{"LIST", "[*|+|-]{1}[ ]{1}"},
 	"NUMBEREDLIST": TokenType{"NUMBEREDLIST", "\\d[.]"},
 	"CODE":         TokenType{"CODE", "[`]"},
 	"CODEBLOCK":    TokenType{"CODEBLOCK", "[`]{3}"},
