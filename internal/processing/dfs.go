@@ -79,6 +79,16 @@ func LineLayout(node Node) string {
 				HTMLLine += LineLayout(*node.operand[i])
 			}
 		}
+	case "BOLT":
+		{
+			fmt.Println(node.operator.Text)
+			HTMLLine += "<b>"
+			HTMLLine += node.operator.Text[2 : len(node.operator.Text)-2]
+			HTMLLine += "</b>"
+			for i := range node.operand {
+				HTMLLine += LineLayout(*node.operand[i])
+			}
+		}
 	}
 	return HTMLLine
 }
