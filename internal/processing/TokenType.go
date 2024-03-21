@@ -16,6 +16,7 @@ var TokenTypes = map[string]TokenType{
 	"CODEBLOCK":    TokenType{"CODEBLOCK", "[`]{3}"},
 	"WORD":         TokenType{"WORD", "\\w+[-]?[.|,|!|?]?"},
 	"SPACE":        TokenType{"SPACE", "[ ]{1,}"},
+	"ITALIC":       TokenType{"ITALIC", "[*|_]{1}[\\w| ]{1,}[*|_]{1}"},
 }
 
 var SecondTokenTypes = map[string]TokenType{

@@ -123,5 +123,9 @@ func (P *Parser) ParseText() Node {
 		n := P.ParseText()
 		return Node{operator: space, operand: []*Node{&n}}
 	}
+	if italics := P.Match([]TokenType{TokenTypes["ITALIC"]}); italics != EmptyToken {
+		n := P.ParseText()
+		return Node{operator: italics, operand: []*Node{&n}}
+	}
 	return Node{}
 }
