@@ -39,10 +39,9 @@ func main() {
 		TokenList: []processing.Token{},
 	}
 	lex.LexAnalusis()
-	fmt.Println(lex.TokenList)
 	HTML := `<!DOCTYPE html>
 	<html lang="en">
-	<head>
+	<head style="margin: 100vw">
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Document</title>

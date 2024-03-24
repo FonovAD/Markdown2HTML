@@ -81,6 +81,10 @@ func (P *Parser) ParseLine() Node {
 		n := P.ParseText()
 		return Node{operator: token, operand: []*Node{&n}}
 	}
+	if token := P.Match([]TokenType{TokenTypes["SPACE"]}); token != EmptyToken {
+		n := P.ParseText()
+		return Node{operator: token, operand: []*Node{&n}}
+	}
 	if operator := P.Match([]TokenType{TokenTypes["CODE"]}); operator != EmptyToken {
 		CodeNodes := []*Node{}
 		for P.Match([]TokenType{TokenTypes["CODE"]}) == EmptyToken {
