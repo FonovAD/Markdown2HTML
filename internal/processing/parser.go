@@ -62,36 +62,26 @@ func (P *Parser) NewParseCode() StatmentsNode { //StatmentsNode - корень �
 }
 
 func (P *Parser) ParseLine() Node {
-	if token := P.Match([]TokenType{TokenTypes["HEADING"]}); token != EmptyToken {
+	RecursiveTypes := []TokenType{
+		TokenTypes["HEADING"],
+		TokenTypes["NUMBEREDLIST"],
+		TokenTypes["LIST"],
+		TokenTypes["WORD"],
+		TokenTypes["SPACE"]}
+	if token := P.Match(RecursiveTypes); token != EmptyToken {
 		n := P.ParseText()
 		return Node{operator: token, operand: []*Node{&n}}
 	}
 	if token := P.Match([]TokenType{TokenTypes["LINE"]}); token != EmptyToken {
 		return Node{operator: token, operand: nil}
 	}
-	if token := P.Match([]TokenType{TokenTypes["NUMBEREDLIST"]}); token != EmptyToken {
-		n := P.ParseText()
-		return Node{operator: token, operand: []*Node{&n}}
-	}
-	if token := P.Match([]TokenType{TokenTypes["LIST"]}); token != EmptyToken {
-		n := P.ParseText()
-		return Node{operator: token, operand: []*Node{&n}}
-	}
-	if token := P.Match([]TokenType{TokenTypes["WORD"]}); token != EmptyToken {
-		n := P.ParseText()
-		return Node{operator: token, operand: []*Node{&n}}
-	}
-	if token := P.Match([]TokenType{TokenTypes["SPACE"]}); token != EmptyToken {
-		n := P.ParseText()
-		return Node{operator: token, operand: []*Node{&n}}
-	}
-	if operator := P.Match([]TokenType{TokenTypes["CODE"]}); operator != EmptyToken {
+	if token := P.Match([]TokenType{TokenTypes["CODE"]}); token != EmptyToken {
 		CodeNodes := []*Node{}
 		for P.Match([]TokenType{TokenTypes["CODE"]}) == EmptyToken {
 			n := P.ParseText()
 			CodeNodes = append(CodeNodes, &n)
 		}
-		return Node{operator: operator, operand: CodeNodes}
+		return Node{operator: token, operand: CodeNodes}
 	}
 	var node = Node{operator: Token{}, operand: []*Node{}}
 	for P.Match([]TokenType{TokenTypes["SEMICOLON"]}) == EmptyToken {
@@ -119,21 +109,15 @@ func (P *Parser) ParseList() Node {
 }
 
 func (P *Parser) ParseText() Node {
-	if word := P.Match([]TokenType{TokenTypes["WORD"]}); word != EmptyToken {
-		n := P.ParseText()
-		return Node{operator: word, operand: []*Node{&n}}
+	RecursiveTypes := []TokenType{
+		TokenTypes["WORD"],
+		TokenTypes["SPACE"],
+		TokenTypes["ITALIC"],
+		TokenTypes["BOLT"],
 	}
-	if space := P.Match([]TokenType{TokenTypes["SPACE"]}); space != EmptyToken {
+	if token := P.Match(RecursiveTypes); token != EmptyToken {
 		n := P.ParseText()
-		return Node{operator: space, operand: []*Node{&n}}
-	}
-	if italics := P.Match([]TokenType{TokenTypes["ITALIC"]}); italics != EmptyToken {
-		n := P.ParseText()
-		return Node{operator: italics, operand: []*Node{&n}}
-	}
-	if bolt := P.Match([]TokenType{TokenTypes["BOLT"]}); bolt != EmptyToken {
-		n := P.ParseText()
-		return Node{operator: bolt, operand: []*Node{&n}}
+		return Node{operator: token, operand: []*Node{&n}}
 	}
 	return Node{}
 }
