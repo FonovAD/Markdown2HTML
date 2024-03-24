@@ -41,12 +41,12 @@ func main() {
 	lex.LexAnalusis()
 	HTML := `<!DOCTYPE html>
 	<html lang="en">
-	<head style="margin: 100vw">
+	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Document</title>
 	</head>
-	<body>`
+	<body style="margin-left: 3vw; margin-top: 2vh;">`
 	parser := processing.Parser{Tokens: lex.TokenList, Pos: 0}
 	root := parser.NewParseCode()
 	HTML += processing.Run(root)
