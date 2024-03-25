@@ -1,7 +1,5 @@
 package processing
 
-import "fmt"
-
 func Run(node StatmentsNode) string {
 	HTML := ""
 	for i := range node.CodeString {
@@ -71,7 +69,6 @@ func LineLayout(node Node) string {
 		}
 	case "ITALIC":
 		{
-			fmt.Println(node.operator.Text)
 			HTMLLine += "<i>"
 			HTMLLine += node.operator.Text[1 : len(node.operator.Text)-1]
 			HTMLLine += "</i>"
@@ -81,7 +78,6 @@ func LineLayout(node Node) string {
 		}
 	case "BOLT":
 		{
-			fmt.Println(node.operator.Text)
 			HTMLLine += "<b>"
 			HTMLLine += node.operator.Text[2 : len(node.operator.Text)-2]
 			HTMLLine += "</b>"
@@ -89,6 +85,14 @@ func LineLayout(node Node) string {
 				HTMLLine += LineLayout(*node.operand[i])
 			}
 		}
+	case "SPECIALCHAR":
+		{
+			HTMLLine += node.operator.Text
+			for i := range node.operand {
+				HTMLLine += LineLayout(*node.operand[i])
+			}
+		}
+
 	}
 	return HTMLLine
 }

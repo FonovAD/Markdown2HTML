@@ -67,7 +67,9 @@ func (P *Parser) ParseLine() Node {
 		TokenTypes["NUMBEREDLIST"],
 		TokenTypes["LIST"],
 		TokenTypes["WORD"],
-		TokenTypes["SPACE"]}
+		TokenTypes["SPACE"],
+		TokenTypes["SPECIALCHAR"],
+	}
 	if token := P.Match(RecursiveTypes); token != EmptyToken {
 		n := P.ParseText()
 		return Node{operator: token, operand: []*Node{&n}}
@@ -110,6 +112,7 @@ func (P *Parser) ParseList() Node {
 
 func (P *Parser) ParseText() Node {
 	RecursiveTypes := []TokenType{
+		TokenTypes["SPECIALCHAR"],
 		TokenTypes["WORD"],
 		TokenTypes["SPACE"],
 		TokenTypes["ITALIC"],
