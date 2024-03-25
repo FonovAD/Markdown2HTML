@@ -18,6 +18,7 @@ var TokenTypes = map[string]TokenType{
 	"WORD":         TokenType{"WORD", "\\w+[-]?[.|,|!|?]?"},
 	"SPACE":        TokenType{"SPACE", "[ ]{1,}"},
 	"ITALIC":       TokenType{"ITALIC", "[*|_]{1}[\\w| ]{1,}[*|_]{1}"},
+	"SPECIALCHAR":  TokenType{"SPECIALCHAR", "[/|;|:|%|@|$|&|~]{1}"},
 }
 
 var SecondTokenTypes = map[string]TokenType{
