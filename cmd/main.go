@@ -27,7 +27,7 @@ func main() {
 	if err != nil {
 		fmt.Printf("Error: %s", err)
 	}
-	FileWithoutByte0 := []byte{}
+	FileWithoutByte0 := make([]byte, len(file))
 	for i := range file {
 		if file[i] != byte(0) {
 			FileWithoutByte0 = append(FileWithoutByte0, file[i])
@@ -38,7 +38,9 @@ func main() {
 		Pos:       0,
 		TokenList: []processing.Token{},
 	}
-	lex.LexAnalusis()
+	if err := lex.LexAnalusis(); err != nil {
+		fmt.Println("Beda")
+	}
 	HTML := `<!DOCTYPE html>
 	<html lang="en">
 	<head>

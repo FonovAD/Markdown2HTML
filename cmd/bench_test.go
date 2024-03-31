@@ -6,12 +6,7 @@ import (
 	"testing"
 )
 
-func BenchmarkMain(b *testing.B) {
-	errors := 0
-	TotalOperations := 0
-	for i := 0; i < b.N; i++ {
-		TotalOperations += 1
-		FileWithoutByte0 := `# User interface
+const GeneralTest string = `# User interface
 ## The main page
 #### The functionality of the main page
 1. Book Recommendation 
@@ -31,15 +26,22 @@ Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis dolor assumend
 
 @Pepsi_King %
 `
-		lex := processing.Lexer{
-			Code:      string(FileWithoutByte0),
-			Pos:       0,
-			TokenList: []processing.Token{},
-		}
-		if err := lex.LexAnalusis(); err != nil {
-			errors += 1
-		}
-		HTML := `<!DOCTYPE html>
+
+type TestedToken struct {
+	TestTokenType string
+	TestToken     string
+}
+
+func TMain(TT TestedToken) error {
+	lex := processing.Lexer{
+		Code:      TT.TestToken,
+		Pos:       0,
+		TokenList: []processing.Token{},
+	}
+	if err := lex.LexAnalusis(); err != nil {
+		return err
+	}
+	HTML := `<!DOCTYPE html>
 		<html lang="en">
 		<head>
 			<meta charset="UTF-8">
@@ -47,12 +49,104 @@ Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis dolor assumend
 			<title>Document</title>
 		</head>
 		<body style="margin-left: 3vw; margin-top: 2vh;">`
-		parser := processing.Parser{Tokens: lex.TokenList, Pos: 0}
-		root := parser.NewParseCode()
-		HTML += processing.Run(root)
-		HTML += `
+	parser := processing.Parser{Tokens: lex.TokenList, Pos: 0}
+	root := parser.NewParseCode()
+	HTML += processing.Run(root)
+	HTML += `
 		</body>
 		</html>`
+	return nil
+}
+
+func BenchmarkMain(b *testing.B) {
+	TT := TestedToken{TestTokenType: "main", TestToken: GeneralTest}
+	errors := 0
+	TotalOperations := 0
+	for i := 0; i < b.N; i++ {
+		TotalOperations += 1
+		if err := TMain(TT); err != nil {
+			errors += 1
+		}
 	}
-	fmt.Printf("\nTotat op: %d, \t errors %d\n", TotalOperations, errors)
+	fmt.Printf("\tTotat op: %d, \t errors %d\n", TotalOperations, errors)
+}
+
+func BenchmarkHEADING(b *testing.B) {
+	TT := TestedToken{TestTokenType: "HEADING", TestToken: "#"}
+	errors := 0
+	TotalOperations := 0
+	for i := 0; i < b.N; i++ {
+		TotalOperations += 1
+		if err := TMain(TT); err != nil {
+			errors += 1
+		}
+	}
+	fmt.Printf("\tTotat op: %d, \t errors %d\n", TotalOperations, errors)
+}
+
+func BenchmarkWORD(b *testing.B) {
+	TT := TestedToken{TestTokenType: "WORD", TestToken: "Incomprehensibilities"}
+	errors := 0
+	TotalOperations := 0
+	for i := 0; i < b.N; i++ {
+		TotalOperations += 1
+		if err := TMain(TT); err != nil {
+			errors += 1
+		}
+	}
+	fmt.Printf("\tTotat op: %d, \t errors %d\n", TotalOperations, errors)
+}
+
+func BenchmarLINE(b *testing.B) {
+	TT := TestedToken{TestTokenType: "LINE", TestToken: "==="}
+	errors := 0
+	TotalOperations := 0
+	for i := 0; i < b.N; i++ {
+		TotalOperations += 1
+		if err := TMain(TT); err != nil {
+			errors += 1
+		}
+	}
+	fmt.Printf("\tTotat op: %d, \t errors %d\n", TotalOperations, errors)
+}
+
+func BenchmarkLIST(b *testing.B) {
+	TT := TestedToken{TestTokenType: "LIST", TestToken: `- Book Recommendation
+- Collections of books`}
+	errors := 0
+	TotalOperations := 0
+	for i := 0; i < b.N; i++ {
+		TotalOperations += 1
+		if err := TMain(TT); err != nil {
+			errors += 1
+		}
+	}
+	fmt.Printf("\tTotat op: %d, \t errors %d\n", TotalOperations, errors)
+}
+
+func BenchmarkNUMBEREDLIST(b *testing.B) {
+	TT := TestedToken{TestTokenType: "NUMBEREDLIST", TestToken: `1. Book Recommendation
+2. Collections of books`}
+	errors := 0
+	TotalOperations := 0
+	for i := 0; i < b.N; i++ {
+		TotalOperations += 1
+		if err := TMain(TT); err != nil {
+			errors += 1
+		}
+	}
+	fmt.Printf("\tTotat op: %d, \t errors %d\n", TotalOperations, errors)
+}
+
+func BenchmarkBOLT(b *testing.B) {
+	TT := TestedToken{TestTokenType: "BOLT", TestToken: " **test**"}
+	errors := 0
+	TotalOperations := 0
+	for i := 0; i < b.N; i++ {
+		TotalOperations += 1
+		if err := TMain(TT); err != nil {
+			errors += 1
+		}
+	}
+	fmt.Printf("\tTotat op: %d, \t errors %d\n", TotalOperations, errors)
 }
