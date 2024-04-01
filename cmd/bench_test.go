@@ -3,6 +3,7 @@ package main
 import (
 	"Markdown_Processor/internal/processing"
 	"fmt"
+	"strings"
 	"testing"
 )
 
@@ -59,14 +60,18 @@ func TMain(TT TestedToken) error {
 }
 
 func BenchmarkMain(b *testing.B) {
-	TT := TestedToken{TestTokenType: "main", TestToken: GeneralTest}
 	errors := 0
 	TotalOperations := 0
+	tokens := strings.Split(GeneralTest, "\n")
 	for i := 0; i < b.N; i++ {
-		TotalOperations += 1
-		if err := TMain(TT); err != nil {
-			errors += 1
+		for _, j := range tokens {
+			TotalOperations += 1
+			TT := TestedToken{TestTokenType: "main", TestToken: j}
+			if err := TMain(TT); err != nil {
+				errors += 1
+			}
 		}
+
 	}
 	fmt.Printf("\tTotat op: %d, \t errors %d\n", TotalOperations, errors)
 }

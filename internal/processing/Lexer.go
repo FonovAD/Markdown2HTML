@@ -14,7 +14,7 @@ type Lexer struct {
 func (L *Lexer) LexAnalusis() error {
 	count := 0
 	for L.NextToken() {
-		if count > len(L.Code) {
+		if count > (len(L.Code)*2)/3 {
 			return errors.New("I can't make out the words, try again")
 		} else {
 			count += 1
