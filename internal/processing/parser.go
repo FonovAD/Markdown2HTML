@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-var EmptyToken Token = Token{TokenType{"", ""}, "", 0}
+var EmptyToken Token = Token{TokenType{"", ""}, ""}
 
 var prefixHeadings = map[string]string{
 	"#":      "<h1>",
@@ -39,7 +39,7 @@ func (P *Parser) Match(ExpectedTokenTypes []TokenType) Token {
 			}
 		}
 	}
-	return Token{TokenType{"", ""}, "", 0}
+	return Token{TokenType{"", ""}, ""}
 }
 
 func (P *Parser) Require(ExpectedTokenTypes []TokenType) Token {
@@ -97,7 +97,7 @@ func (P *Parser) ParseLine() Node {
 }
 
 func (P *Parser) ParseList() Node {
-	listnode := Node{operator: Token{Type: SecondTokenTypes["GROUPNUMBEREDLIST"], Text: "GROUPNUMBEREDLIST", Pos: P.Pos}}
+	listnode := Node{operator: Token{Type: SecondTokenTypes["GROUPNUMBEREDLIST"], Text: "GROUPNUMBEREDLIST"}}
 	token := P.Match([]TokenType{TokenTypes["NUMBEREDLIST"]})
 	for token != EmptyToken {
 		node := Node{operator: token, operand: []*Node{}}

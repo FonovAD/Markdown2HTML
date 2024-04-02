@@ -14,7 +14,7 @@ type Lexer struct {
 func (L *Lexer) LexAnalusis() error {
 	count := 0
 	for L.NextToken() {
-		if count > (len(L.Code)*2)/3 {
+		if count > len(L.Code)/2 {
 			return errors.New("I can't make out the words, try again")
 		} else {
 			count += 1
@@ -36,9 +36,8 @@ func (L *Lexer) NextToken() bool {
 		r, _ := regexp.Compile("^" + tokenType.regex)
 		result := r.FindString(L.Code[L.Pos:])
 		found := r.MatchString(L.Code[L.Pos:])
-		resultIndex := r.FindStringIndex(L.Code[L.Pos:])
 		if found {
-			token := Token{tokenType, result, resultIndex[1]}
+			token := Token{tokenType, result}
 			L.Pos = L.Pos + len(result)
 			L.TokenList = append(L.TokenList, token)
 			return true

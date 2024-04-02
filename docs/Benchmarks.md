@@ -143,3 +143,58 @@ tokens := strings.Split(GeneralTest, "\n")
         PASS
         ok      Markdown_Processor/cmd  7.833s
         ```
+
+### 4
+#### Комментарий
+Убрал ненужный компонент. Должно немного ускорить приложение.
+
+#### Изменения в коде
+.internal/processing/parser.go[7;100]
+`var EmptyToken Token = Token{TokenType{"", ""}, ""}`
+
+```listnode := Node{operator: Token{Type: SecondTokenTypes["GROUPNUMBEREDLIST"], Text: "GROUPNUMBEREDLIST"}}
+```
+
+.internal/processing/Token.go[3:6]
+```
+type Token struct {
+	Type TokenType
+	Text string
+}
+```
+
+
+#### Тесты
+        ```
+        goos: darwin
+        goarch: arm64
+        pkg: Markdown_Processor/test
+        BenchmarkMain-8                         Totat op: 2000,          errors 5
+                Totat op: 8080,          errors 19
+             404           2904436 ns/op         4600246 B/op      52454 allocs/op
+                Totat op: 1,     errors 1
+        BenchmarkHEADING-8                      Totat op: 100,   errors 5
+                Totat op: 10000,         errors 633
+                Totat op: 137887,        errors 8716
+          137887              8460 ns/op           14716 B/op        165 allocs/op
+                Totat op: 1,     errors 0
+        BenchmarkWORD-8                         Totat op: 100,   errors 0
+                Totat op: 10000,         errors 0
+                Totat op: 118845,        errors 0
+          118845             10234 ns/op           15753 B/op        178 allocs/op
+                Totat op: 1,     errors 0
+        BenchmarkLIST-8                         Totat op: 100,   errors 0
+                Totat op: 10000,         errors 0
+           10000            112036 ns/op          167888 B/op       1920 allocs/op
+                Totat op: 1,     errors 0
+        BenchmarkNUMBEREDLIST-8                 Totat op: 100,   errors 0
+                Totat op: 9154,          errors 0
+            9154            128578 ns/op          193625 B/op       2215 allocs/op
+                Totat op: 1,     errors 0
+        BenchmarkBOLT-8                         Totat op: 100,   errors 0
+                Totat op: 10000,         errors 0
+                Totat op: 56156,         errors 5
+           56156             20666 ns/op           32434 B/op        370 allocs/op
+        PASS
+        ok      Markdown_Processor/test 7.855s
+        ```
