@@ -1,6 +1,7 @@
 package processing
 
 import (
+	"errors"
 	"regexp"
 )
 
@@ -10,16 +11,16 @@ type Lexer struct {
 	TokenList []Token
 }
 
-func (L *Lexer) LexAnalusis() []Token {
+func (L *Lexer) LexAnalusis() error {
 	count := 0
 	for L.NextToken() {
-		if count > len(L.Code)*5 {
-			panic("I can't make out the words, try again")
+		if count > len(L.Code)/2 {
+			return errors.New("I can't make out the words, try again")
 		} else {
 			count += 1
 		}
 	}
-	return L.TokenList
+	return nil
 }
 
 func (L *Lexer) NextToken() bool {
@@ -35,9 +36,8 @@ func (L *Lexer) NextToken() bool {
 		r, _ := regexp.Compile("^" + tokenType.regex)
 		result := r.FindString(L.Code[L.Pos:])
 		found := r.MatchString(L.Code[L.Pos:])
-		resultIndex := r.FindStringIndex(L.Code[L.Pos:])
 		if found {
-			token := Token{tokenType, result, resultIndex[1]}
+			token := Token{tokenType, result}
 			L.Pos = L.Pos + len(result)
 			L.TokenList = append(L.TokenList, token)
 			return true
