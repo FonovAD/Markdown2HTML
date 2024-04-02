@@ -198,3 +198,47 @@ type Token struct {
         PASS
         ok      Markdown_Processor/test 7.855s
         ```
+
+
+### 5
+#### Комментарий
+При конкатенации строк строка пересоздается. Работа с массивами выглядит иначе и должна быть эффективнее. Поэтому заменил все конкатенации строк на метод bytes.Buffer.WriteString
+
+#### Изменения в коде
+.internal/processing/dfs.go
+
+
+#### Тесты
+        ```
+        goos: darwin
+        goarch: arm64
+        pkg: Markdown_Processor/test
+        BenchmarkMain-8                         Totat op: 2000,          errors 6
+                Totat op: 8060,          errors 32
+             403           2891616 ns/op         4644179 B/op      52378 allocs/op
+                Totat op: 1,     errors 0
+        BenchmarkHEADING-8                      Totat op: 100,   errors 4
+                Totat op: 10000,         errors 617
+                Totat op: 138834,        errors 8603
+          138834              8563 ns/op           15109 B/op        170 allocs/op
+                Totat op: 1,     errors 0
+        BenchmarkWORD-8                         Totat op: 100,   errors 0
+                Totat op: 10000,         errors 0
+                Totat op: 115190,        errors 0
+          115190             10311 ns/op           16481 B/op        186 allocs/op
+                Totat op: 1,     errors 0
+        BenchmarkLIST-8                         Totat op: 100,   errors 0
+                Totat op: 10000,         errors 0
+           10000            106802 ns/op          170584 B/op       1947 allocs/op
+                Totat op: 1,     errors 0
+        BenchmarkNUMBEREDLIST-8                 Totat op: 100,   errors 0
+                Totat op: 9810,          errors 0
+            9810            117054 ns/op          189903 B/op       2147 allocs/op
+                Totat op: 1,     errors 0
+        BenchmarkBOLT-8                         Totat op: 100,   errors 0
+                Totat op: 10000,         errors 1
+                Totat op: 59487,         errors 10
+           59487             19348 ns/op           31516 B/op        363 allocs/op
+        PASS
+        ok      Markdown_Processor/test 7.738s
+        ```

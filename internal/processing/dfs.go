@@ -1,98 +1,101 @@
 package processing
 
-func Run(node StatmentsNode) string {
-	HTML := ""
+import "bytes"
+
+func Run(node StatmentsNode, file_size int) string {
+	var HTML bytes.Buffer
+	HTML.Grow(file_size)
 	for i := range node.CodeString {
-		HTML += LineLayout(node.CodeString[i])
+		HTML.WriteString(LineLayout(node.CodeString[i]))
 	}
-	return HTML
+	return HTML.String()
 }
 
 func LineLayout(node Node) string {
-	HTMLLine := ""
+	var HTMLLine bytes.Buffer
 	switch node.operator.Type.name {
 	case "HEADING":
 		{
-			HTMLLine += prefixHeadings[node.operator.Text]
+			HTMLLine.WriteString(prefixHeadings[node.operator.Text])
 			for i := range node.operand {
-				HTMLLine += LineLayout(*node.operand[i])
+				HTMLLine.WriteString(LineLayout(*node.operand[i]))
 			}
-			HTMLLine += postfixHeadings[node.operator.Text]
+			HTMLLine.WriteString(postfixHeadings[node.operator.Text])
 		}
 	case "LINE":
 		{
-			HTMLLine += "<hr stule=\"border: none; background-color: black; color: black; height: 2px;\"></hr>"
+			HTMLLine.WriteString("<hr stule=\"border: none; background-color: black; color: black; height: 2px;\"></hr>")
 		}
 	case "SEMICOLON": // It will never happen
 		{ // Reserved for future feature additions
-			HTMLLine += "\n"
+			HTMLLine.WriteString("\n")
 		}
 	case "WORD":
 		{
-			HTMLLine += node.operator.Text
+			HTMLLine.WriteString(node.operator.Text)
 			for i := range node.operand {
-				HTMLLine += LineLayout(*node.operand[i])
+				HTMLLine.WriteString(LineLayout(*node.operand[i]))
 			}
 		}
 	case "NUMBEREDLIST":
 		{
-			HTMLLine += `<li style="list-style-type:'`
-			HTMLLine += node.operator.Text
-			HTMLLine += `'; margin-left:1vw">`
+			HTMLLine.WriteString(`<li style="list-style-type:'`)
+			HTMLLine.WriteString(node.operator.Text)
+			HTMLLine.WriteString(`'; margin-left:1vw">`)
 			for i := range node.operand {
-				HTMLLine += LineLayout(*node.operand[i])
+				HTMLLine.WriteString(LineLayout(*node.operand[i]))
 			}
-			HTMLLine += "</li>"
+			HTMLLine.WriteString("</li>")
 		}
 	case "CODE":
 		{
-			HTMLLine += "<code>"
+			HTMLLine.WriteString("<code>")
 			for i := range node.operand {
-				HTMLLine += LineLayout(*node.operand[i])
+				HTMLLine.WriteString(LineLayout(*node.operand[i]))
 			}
-			HTMLLine += "</code>"
+			HTMLLine.WriteString("</code>")
 		}
 	case "SPACE":
 		{
-			HTMLLine += " "
+			HTMLLine.WriteString(" ")
 			for i := range node.operand {
-				HTMLLine += LineLayout(*node.operand[i])
+				HTMLLine.WriteString(LineLayout(*node.operand[i]))
 			}
 		}
 	case "LIST":
 		{
-			HTMLLine += `<li style="margin-left:1vw">`
+			HTMLLine.WriteString(`<li style="margin-left:1vw">`)
 			for i := range node.operand {
-				HTMLLine += LineLayout(*node.operand[i])
+				HTMLLine.WriteString(LineLayout(*node.operand[i]))
 			}
-			HTMLLine += "</li>"
+			HTMLLine.WriteString("</li>")
 		}
 	case "ITALIC":
 		{
-			HTMLLine += "<i>"
-			HTMLLine += node.operator.Text[1 : len(node.operator.Text)-1]
-			HTMLLine += "</i>"
+			HTMLLine.WriteString("<i>")
+			HTMLLine.WriteString(node.operator.Text[1 : len(node.operator.Text)-1])
+			HTMLLine.WriteString("</i>")
 			for i := range node.operand {
-				HTMLLine += LineLayout(*node.operand[i])
+				HTMLLine.WriteString(LineLayout(*node.operand[i]))
 			}
 		}
 	case "BOLT":
 		{
-			HTMLLine += "<b>"
-			HTMLLine += node.operator.Text[2 : len(node.operator.Text)-2]
-			HTMLLine += "</b>"
+			HTMLLine.WriteString("<b>")
+			HTMLLine.WriteString(node.operator.Text[2 : len(node.operator.Text)-2])
+			HTMLLine.WriteString("</b>")
 			for i := range node.operand {
-				HTMLLine += LineLayout(*node.operand[i])
+				HTMLLine.WriteString(LineLayout(*node.operand[i]))
 			}
 		}
 	case "SPECIALCHAR":
 		{
-			HTMLLine += node.operator.Text
+			HTMLLine.WriteString(node.operator.Text)
 			for i := range node.operand {
-				HTMLLine += LineLayout(*node.operand[i])
+				HTMLLine.WriteString(LineLayout(*node.operand[i]))
 			}
 		}
 
 	}
-	return HTMLLine
+	return HTMLLine.String()
 }

@@ -52,7 +52,8 @@ func TMain(TT TestedToken) error {
 		<body style="margin-left: 3vw; margin-top: 2vh;">`
 	parser := processing.Parser{Tokens: lex.TokenList, Pos: 0}
 	root := parser.NewParseCode()
-	HTML += processing.Run(root)
+	HTMLsize := (len(TT.TestToken) * 5) / 4
+	HTML += processing.Run(root, HTMLsize)
 	HTML += `
 		</body>
 		</html>`
