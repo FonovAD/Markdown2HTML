@@ -1,8 +1,12 @@
 package processing
 
 import (
-	"errors"
 	"regexp"
+)
+
+const (
+	LexAnalusisDivisor = 2
+	LexAnalusisError   = "I can't make out the words, try again"
 )
 
 type Lexer struct {
@@ -14,8 +18,8 @@ type Lexer struct {
 func (L *Lexer) LexAnalusis() error {
 	count := 0
 	for L.NextToken() {
-		if count > len(L.Code)/2 {
-			return errors.New("I can't make out the words, try again")
+		if count > len(L.Code)/LexAnalusisDivisor {
+			return nil
 		} else {
 			count += 1
 		}

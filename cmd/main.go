@@ -9,6 +9,22 @@ import (
 	"gopkg.in/urfave/cli.v1"
 )
 
+const (
+	HTMLsizeMultiplier = 5
+	HTMLsizeDevisor    = 4
+	HTMLPrefix         = `<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Document</title>
+	</head>
+	<body style="margin-left: 3vw; margin-top: 2vh;">`
+	HTMLPostfix = `
+	</body>
+	</html>`
+)
+
 func main() {
 	var FileName string
 	app := cli.NewApp()
@@ -35,23 +51,7 @@ func main() {
 		}
 	}
 	Code := strings.Split(string(FileWithoutByte0), "\n")
-
-	// lex := processing.Lexer{
-	// 	Code:      string(FileWithoutByte0),
-	// 	Pos:       0,
-	// 	TokenList: []processing.Token{},
-	// }
-	// if err := lex.LexAnalusis(); err != nil {
-	// 	fmt.Println("Beda")
-	// }
-	HTML := `<!DOCTYPE html>
-	<html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Document</title>
-	</head>
-	<body style="margin-left: 3vw; margin-top: 2vh;">`
+	HTML := HTMLPrefix
 	for _, j := range Code {
 		lex := processing.Lexer{
 			Code:      string(j),
@@ -59,19 +59,13 @@ func main() {
 			TokenList: []processing.Token{},
 		}
 		if err := lex.LexAnalusis(); err != nil {
-			fmt.Println("Beda")
+			fmt.Println(err)
 		}
 		parser := processing.Parser{Tokens: lex.TokenList, Pos: 0}
 		root := parser.NewParseCode()
-		HTMLsize := (len(FileWithoutByte0) * 5) / 4
+		HTMLsize := (len(FileWithoutByte0) * HTMLsizeMultiplier) / HTMLsizeDevisor
 		HTML += processing.Run(root, HTMLsize)
 	}
-	// parser := processing.Parser{Tokens: lex.TokenList, Pos: 0}
-	// root := parser.NewParseCode()
-	// HTMLsize := (len(FileWithoutByte0) * 5) / 4
-	// HTML += processing.Run(root, HTMLsize)
-	HTML += `
-	</body>
-	</html>`
+	HTML += HTMLPostfix
 	fmt.Println(HTML)
 }
