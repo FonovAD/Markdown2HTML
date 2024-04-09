@@ -1,9 +1,8 @@
 package main
 
 import (
-	"Markdown_Processor/internal/processing"
+	MarkdownToHTML "Markdown_Processor/pkg/md2html"
 	"fmt"
-	"strings"
 	"testing"
 )
 
@@ -34,43 +33,18 @@ type TestedToken struct {
 }
 
 func TMain(TT TestedToken) error {
-	lex := processing.Lexer{
-		Code:      TT.TestToken,
-		Pos:       0,
-		TokenList: []processing.Token{},
-	}
-	if err := lex.LexAnalusis(); err != nil {
-		return err
-	}
-	HTML := `<!DOCTYPE html>
-		<html lang="en">
-		<head>
-			<meta charset="UTF-8">
-			<meta name="viewport" content="width=device-width, initial-scale=1.0">
-			<title>Document</title>
-		</head>
-		<body style="margin-left: 3vw; margin-top: 2vh;">`
-	parser := processing.Parser{Tokens: lex.TokenList, Pos: 0}
-	root := parser.NewParseCode()
-	HTMLsize := (len(TT.TestToken) * 5) / 4
-	HTML += processing.Run(root, HTMLsize)
-	HTML += `
-		</body>
-		</html>`
+	MarkdownToHTML.Convert(GeneralTest)
 	return nil
 }
 
 func BenchmarkMain(b *testing.B) {
 	errors := 0
 	TotalOperations := 0
-	tokens := strings.Split(GeneralTest, "\n")
 	for i := 0; i < b.N; i++ {
-		for _, j := range tokens {
-			TotalOperations += 1
-			TT := TestedToken{TestTokenType: "main", TestToken: j}
-			if err := TMain(TT); err != nil {
-				errors += 1
-			}
+		TotalOperations += 1
+		_, err := MarkdownToHTML.Convert(GeneralTest)
+		if err != nil {
+			errors += 1
 		}
 	}
 	fmt.Printf("\tTotat op: %d, \t errors %d\n", TotalOperations, errors)

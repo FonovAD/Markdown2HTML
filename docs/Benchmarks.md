@@ -242,3 +242,46 @@ type Token struct {
         PASS
         ok      Markdown_Processor/test 7.738s
         ```
+
+
+### 5
+#### Комментарий
+Распараллеливание задач парсинга каждой строки должно немного увеличить количество потребляемой памяти, но при этом сократить время обработки. Так же уменьшиться кол-во ошибок в ходе парсинга, что позволит уменьшить кол-во повторов, что хорошо повлияет на все показатели.
+
+#### Изменения в коде
+слишком много чтобы описать конкретно. Изменения: 
+- функция main
+- константы,  используемые в Lexer.go
+- т.к. планирую использовать md2html в других проектак - она перенесена в pkg
+- изменены тесты, подстать новому main.go
+
+#### Тесты
+        ```
+        goos: darwin
+        goarch: arm64
+        BenchmarkMain-8                         Totat op: 100,   errors 0
+                Totat op: 429,   errors 0
+             429           2608661 ns/op         3885375 B/op      44595 allocs/op
+                Totat op: 1,     errors 0
+        BenchmarkHEADING-8                      Totat op: 100,   errors 0
+                Totat op: 458,   errors 0
+             458           2630975 ns/op         3892135 B/op      44638 allocs/op
+                Totat op: 1,     errors 0
+        BenchmarkWORD-8                         Totat op: 100,   errors 0
+                Totat op: 450,   errors 0
+             450           2677081 ns/op         3894934 B/op      44658 allocs/op
+                Totat op: 1,     errors 0
+        BenchmarkLIST-8                         Totat op: 100,   errors 0
+                Totat op: 438,   errors 0
+             438           2665665 ns/op         3890421 B/op      44618 allocs/op
+                Totat op: 1,     errors 0
+        BenchmarkNUMBEREDLIST-8                 Totat op: 100,   errors 0
+                Totat op: 446,   errors 0
+             446           2670146 ns/op         3894489 B/op      44680 allocs/op
+                Totat op: 1,     errors 0
+        BenchmarkBOLT-8                         Totat op: 100,   errors 0
+                Totat op: 438,   errors 0
+             438           2678594 ns/op         3906183 B/op      44794 allocs/op
+        PASS
+        ok      command-line-arguments  8.961s
+        ```
