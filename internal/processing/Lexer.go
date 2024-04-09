@@ -1,7 +1,6 @@
 package processing
 
 import (
-	"errors"
 	"regexp"
 )
 
@@ -20,7 +19,7 @@ func (L *Lexer) LexAnalusis() error {
 	count := 0
 	for L.NextToken() {
 		if count > len(L.Code)/LexAnalusisDivisor {
-			return errors.New(LexAnalusisError)
+			return nil
 		} else {
 			count += 1
 		}

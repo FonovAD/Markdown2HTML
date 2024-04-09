@@ -51,14 +51,6 @@ func main() {
 		}
 	}
 	Code := strings.Split(string(FileWithoutByte0), "\n")
-	// lex := processing.Lexer{
-	// 	Code:      string(FileWithoutByte0),
-	// 	Pos:       0,
-	// 	TokenList: []processing.Token{},
-	// }
-	// if err := lex.LexAnalusis(); err != nil {
-	// 	fmt.Println("Beda")
-	// }
 	HTML := HTMLPrefix
 	for _, j := range Code {
 		lex := processing.Lexer{
@@ -67,7 +59,7 @@ func main() {
 			TokenList: []processing.Token{},
 		}
 		if err := lex.LexAnalusis(); err != nil {
-			fmt.Println("Beda")
+			fmt.Println(err)
 		}
 		parser := processing.Parser{Tokens: lex.TokenList, Pos: 0}
 		root := parser.NewParseCode()
