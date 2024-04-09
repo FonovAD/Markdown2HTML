@@ -1,4 +1,4 @@
-package processing
+package MarkdownToHTML
 
 type TokenType struct {
 	name  string
