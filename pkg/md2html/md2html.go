@@ -13,6 +13,7 @@ type HTMLLine struct {
 	content        string
 }
 
+// The function converts markdown to html
 func Convert(MdText string) (string, error) {
 	Code := strings.Split(string(MdText), "\n")
 	var HTML bytes.Buffer
@@ -34,6 +35,14 @@ func Convert(MdText string) (string, error) {
 	return HTML.String(), nil
 }
 
+// StringAnalysis parses the transmitted string,
+// after which it transmits the resulting html
+// fragment to the channel
+//
+//	type HTMLLine struct {
+//		SequenceNumber int
+//		content        string
+//	}
 func StringAnalysis(wg *sync.WaitGroup, c chan HTMLLine, line string, lineNumber int) {
 	htmlLine := HTMLLine{SequenceNumber: lineNumber}
 
@@ -53,6 +62,13 @@ func StringAnalysis(wg *sync.WaitGroup, c chan HTMLLine, line string, lineNumber
 	wg.Done()
 }
 
+// The part of the quick sort that performs
+// comparison and rearrangement of array fragments
+//
+//	type HTMLLine struct {
+//		SequenceNumber int
+//		content        string
+//	}
 func QSpart1(arr []HTMLLine, low, high int) ([]HTMLLine, int) {
 	pivot := arr[high]
 	i := low
@@ -66,6 +82,13 @@ func QSpart1(arr []HTMLLine, low, high int) ([]HTMLLine, int) {
 	return arr, i
 }
 
+// A part of the quick sort that recursively
+// divides the array and sorts both parts
+//
+//	type HTMLLine struct {
+//		SequenceNumber int
+//		content        string
+//	}
 func QSpart2(arr []HTMLLine, low, high int) []HTMLLine {
 	if low < high {
 		var p int
@@ -78,4 +101,16 @@ func QSpart2(arr []HTMLLine, low, high int) []HTMLLine {
 
 func QuickSort(arr []HTMLLine) []HTMLLine {
 	return QSpart2(arr, 0, len(arr)-1)
+}
+
+func Split(file []byte) []string {
+	buf := []string{}
+	start := 0
+	for i := 0; i < len(file); i++ {
+		if file[i] == byte(10) || i == len(file)-1 {
+			buf = append(buf, string(file[start:i]))
+			start = i + 1
+		}
+	}
+	return buf
 }
