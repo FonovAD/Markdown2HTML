@@ -1,10 +1,11 @@
-package processing
+package internal
 
 import (
 	"errors"
 	"os"
 )
 
+// ReadFile reads text from a file with the FileName path
 func ReadFile(FileName string) ([]byte, error) {
 	MarkdownFile, err := os.Open(FileName)
 	if err != nil {
@@ -21,7 +22,7 @@ func ReadFile(FileName string) ([]byte, error) {
 	return FileData, nil
 }
 
-func Split(file []byte) ([]string, error) {
+func Split(file []byte) []string {
 	buf := []string{}
 	start := 0
 	for i := 0; i < len(file); i++ {
@@ -30,5 +31,5 @@ func Split(file []byte) ([]string, error) {
 			start = i + 1
 		}
 	}
-	return buf, nil
+	return buf
 }

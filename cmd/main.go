@@ -1,10 +1,10 @@
 package main
 
 import (
-	"Markdown_Processor/internal/processing"
+	utils "Markdown_Processor/internal/Utils"
+	MarkdownToHTML "Markdown_Processor/pkg/md2html"
 	"fmt"
 	"os"
-	"strings"
 
 	"gopkg.in/urfave/cli.v1"
 )
@@ -40,7 +40,7 @@ func main() {
 		return nil
 	}
 	app.Run(os.Args)
-	file, err := processing.ReadFile(FileName)
+	file, err := utils.ReadFile(FileName)
 	if err != nil {
 		fmt.Printf("Error: %s", err)
 	}
@@ -50,22 +50,10 @@ func main() {
 			FileWithoutByte0 = append(FileWithoutByte0, file[i])
 		}
 	}
-	Code := strings.Split(string(FileWithoutByte0), "\n")
-	HTML := HTMLPrefix
-	for _, j := range Code {
-		lex := processing.Lexer{
-			Code:      string(j),
-			Pos:       0,
-			TokenList: []processing.Token{},
-		}
-		if err := lex.LexAnalusis(); err != nil {
-			fmt.Println(err)
-		}
-		parser := processing.Parser{Tokens: lex.TokenList, Pos: 0}
-		root := parser.NewParseCode()
-		HTMLsize := (len(FileWithoutByte0) * HTMLsizeMultiplier) / HTMLsizeDevisor
-		HTML += processing.Run(root, HTMLsize)
+	HTML, err := MarkdownToHTML.Convert(string(FileWithoutByte0))
+	if err != nil {
+		fmt.Print(err)
+		os.Exit(1)
 	}
-	HTML += HTMLPostfix
 	fmt.Println(HTML)
 }

@@ -1,12 +1,13 @@
-package processing
+package MarkdownToHTML
 
 import (
 	"regexp"
 )
 
 const (
-	LexAnalusisDivisor = 2
-	LexAnalusisError   = "I can't make out the words, try again"
+	LexAnalusisDivisor    = 10
+	LexAnalusisMultiplier = 3
+	LexAnalusisError      = "I can't make out the words, try again"
 )
 
 type Lexer struct {
@@ -18,7 +19,7 @@ type Lexer struct {
 func (L *Lexer) LexAnalusis() error {
 	count := 0
 	for L.NextToken() {
-		if count > len(L.Code)/LexAnalusisDivisor {
+		if count > len(L.Code)*LexAnalusisMultiplier/LexAnalusisDivisor {
 			return nil
 		} else {
 			count += 1
