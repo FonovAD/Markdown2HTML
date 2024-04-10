@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Markdown_Processor/internal/processing"
+	utils "Markdown_Processor/internal/Utils"
 	MarkdownToHTML "Markdown_Processor/pkg/md2html"
 	"fmt"
 	"os"
@@ -25,11 +25,6 @@ const (
 	</html>`
 )
 
-type HTMLLine struct {
-	SequenceNumber int
-	content        string
-}
-
 func main() {
 	var FileName string
 	app := cli.NewApp()
@@ -45,7 +40,7 @@ func main() {
 		return nil
 	}
 	app.Run(os.Args)
-	file, err := processing.ReadFile(FileName)
+	file, err := utils.ReadFile(FileName)
 	if err != nil {
 		fmt.Printf("Error: %s", err)
 	}
